@@ -16,8 +16,9 @@ class _HomePrincipalState extends State<HomePrincipal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Coffee App'),
-        backgroundColor: Color.fromARGB(255, 0, 0, 116), 
+        title: Text('Coffee App',style: TextStyle(color: Colors.white),),
+        backgroundColor: Color.fromARGB(255, 0, 0, 116),
+         
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -35,26 +35,39 @@ class _SeguimientoPageState extends State<SeguimientoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Seguimiento'),
+        title: Text('Seguimiento',style: TextStyle(color: Colors.white),),
         backgroundColor: Color.fromARGB(255, 0, 0, 116),
       ),
       body: Center(
         child: data.isEmpty
-            ? Text('Loading...')
+            ? CircularProgressIndicator() // Indicador de carga
             : ListView.builder(
+                padding: EdgeInsets.all(16.0),
                 itemCount: data.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text('Seguimiento'),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('id proceso: ${data[index]["idProceso"]}'),
-                        Text('Fecha: ${data[index]["fecha"]}'),
-                        Text('estado: ${data[index]["estado"]}'),
-                        Text('maquina: ${data[index]["maquina"]}'),
-                        Text('usuarios: ${data[index]["usuarios"]}'),
-                      ],
+                  return Card(
+                    color: Colors.grey[200],
+                    margin: EdgeInsets.symmetric(vertical: 8.0),
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Seguimiento',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 8.0),
+                          Text('ID Proceso: ${data[index]["idProceso"]}'),
+                          Text('Fecha: ${data[index]["fecha"]}'),
+                          Text('Estado: ${data[index]["estado"]}'),
+                          Text('Máquina: ${data[index]["maquina"]}'),
+                          Text('Usuarios: ${data[index]["usuarios"]}'),
+                        ],
+                      ),
                     ),
                   );
                 },

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert'; // para decodificar la respuesta JSON
+import 'apis.dart';
 
 class Maquina1Page extends StatefulWidget {
   @override
@@ -9,130 +8,101 @@ class Maquina1Page extends StatefulWidget {
 
 class _Maquina1PageState extends State<Maquina1Page> {
   List<dynamic> data = []; // Lista para almacenar los datos de la primera API
-  List<dynamic> machineData = []; // Lista para almacenar los datos de la segunda API
-  List<dynamic> tipoProcesoData = []; // Lista para almacenar los datos de la tercera API
+  List<dynamic> machineData =
+      []; // Lista para almacenar los datos de la segunda API
+  List<dynamic> tipoProcesoData =
+      []; // Lista para almacenar los datos de la tercera API
 
   @override
   void initState() {
     super.initState();
-    fetchData();
-    fetchMachineData();
-    fetchTipoProcesoData();
+    fetchDataFromApis();
   }
 
-  // Método para obtener datos de la primera API
-  Future<void> fetchData() async {
-    final response = await http.get(Uri.parse('http://localhost:8000/api/datos'));
+  // Método para obtener datos de las APIs
+  Future<void> fetchDataFromApis() async {
+    final dataResult = await fetchData();
+    final machineDataResult = await fetchMachineData();
+    final tipoProcesoDataResult = await fetchTipoProcesoData();
 
-    if (response.statusCode == 200) {
-      setState(() {
-        data = json.decode(response.body);
-      });
-    } else {
-      setState(() {
-        data = [];
-      });
-    }
-  }
-
-  // Método para obtener datos de la segunda API
-  Future<void> fetchMachineData() async {
-    final response = await http.get(Uri.parse('http://localhost:8000/api/maquinas'));
-
-    if (response.statusCode == 200) {
-      setState(() {
-        machineData = json.decode(response.body);
-      });
-    } else {
-      setState(() {
-        machineData = [];
-      });
-    }
-  }
-
-  // Método para obtener datos de la tercera API
-  Future<void> fetchTipoProcesoData() async {
-    final response = await http.get(Uri.parse('http://localhost:8000/api/TipoProceso'));
-
-    if (response.statusCode == 200) {
-      setState(() {
-        tipoProcesoData = json.decode(response.body);
-      });
-    } else {
-      setState(() {
-        tipoProcesoData = [];
-      });
-    }
+    setState(() {
+      data = dataResult;
+      machineData = machineDataResult;
+      tipoProcesoData = tipoProcesoDataResult;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Maquina1'),
+        title: Text('Maquina1',style: TextStyle(color: Colors.white),),
         backgroundColor: Color.fromARGB(255, 0, 0, 116),
       ),
       body: ListView(
         padding: EdgeInsets.all(16.0),
         children: [
-          // Mostrar datos de la primera API
-          data.isEmpty
-              ? Center(child: Text('Loading datos...'))
-              : Column(
-                  children: data.map((item) {
-                    return ListTile(
-                      title: Text('Temperatura: ${item["temperatura"]}'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('ID Máquina: ${item["idMaquina"]}'),
-                          Text('temperatura_s1: ${item["temperatura_s1"]}'),
-                          Text('temperatura_s2: ${item["temperatura_s2"]}'),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-          // Espacio entre las secciones de las APIs
+          _buildSectionCard('Datos', data, (item) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Temperatura: ${item["temperatura"]}'),
+                Text('ID Máquina: ${item["idMaquina"]}'),
+                Text('temperatura_s1: ${item["temperatura_s1"]}'),
+                Text('temperatura_s2: ${item["temperatura_s2"]}'),
+              ],
+            );
+          }),
           SizedBox(height: 16.0),
-          // Mostrar datos de la segunda API (maquinas)
-          machineData.isEmpty
-              ? Center(child: Text('Loading machine data...'))
-              : Column(
-                  children: machineData.map((item) {
-                    return ListTile(
-                      title: Text('ID Máquina: ${item["id"]}'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Descripción: ${item["nombre"]}'),
-                          Text('Estado: ${item["estado"]}'),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-          // Espacio entre las secciones de las APIs
+          _buildSectionCard('Máquinas', machineData, (item) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('ID Máquina: ${item["id"]}'),
+                Text('Descripción: ${item["nombre"]}'),
+                Text('Estado: ${item["estado"]}'),
+              ],
+            );
+          }),
           SizedBox(height: 16.0),
-          // Mostrar datos de la tercera API (TipoProceso)
-          tipoProcesoData.isEmpty
-              ? Center(child: Text('Loading tipo proceso data...'))
-              : Column(
-                  children: tipoProcesoData.map((item) {
-                    return ListTile(
-                      title: Text('ID Tipo Proceso: ${item["_id"]}'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          
-                          Text('Nombre: ${item["nombre"]}'),
-                          
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
+          _buildSectionCard('Tipo de Proceso', tipoProcesoData, (item) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('ID Tipo Proceso: ${item["_id"]}'),
+                Text('Nombre: ${item["nombre"]}'),
+              ],
+            );
+          }),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSectionCard(
+      String title, List<dynamic> data, Widget Function(dynamic) itemBuilder) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      elevation: 5,
+      margin: EdgeInsets.symmetric(vertical: 8.0),
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Divider(color: Colors.grey),
+            ...data.map((item) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: itemBuilder(item),
+              );
+            }).toList(),
+          ],
+        ),
       ),
     );
   }
