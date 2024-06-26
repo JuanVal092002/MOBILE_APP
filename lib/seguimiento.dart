@@ -37,6 +37,9 @@ class _SeguimientoPageState extends State<SeguimientoPage> {
       appBar: AppBar(
         title: Text('Seguimiento',style: TextStyle(color: Colors.white),),
         backgroundColor: Color.fromARGB(255, 0, 0, 116),
+          iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
       ),
       body: Center(
         child: data.isEmpty

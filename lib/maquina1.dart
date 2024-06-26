@@ -8,10 +8,8 @@ class Maquina1Page extends StatefulWidget {
 
 class _Maquina1PageState extends State<Maquina1Page> {
   List<dynamic> data = []; // Lista para almacenar los datos de la primera API
-  List<dynamic> machineData =
-      []; // Lista para almacenar los datos de la segunda API
-  List<dynamic> tipoProcesoData =
-      []; // Lista para almacenar los datos de la tercera API
+  List<dynamic> machineData =[]; // Lista para almacenar los datos de la segunda API
+  List<dynamic> tipoProcesoData = []; // Lista para almacenar los datos de la tercera API
 
   @override
   void initState() {
@@ -38,6 +36,9 @@ class _Maquina1PageState extends State<Maquina1Page> {
       appBar: AppBar(
         title: Text('Maquina1',style: TextStyle(color: Colors.white),),
         backgroundColor: Color.fromARGB(255, 0, 0, 116),
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
       ),
       body: ListView(
         padding: EdgeInsets.all(16.0),

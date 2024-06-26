@@ -18,6 +18,9 @@ class _HomePrincipalState extends State<HomePrincipal> {
       appBar: AppBar(
         title: Text('Coffee App',style: TextStyle(color: Colors.white),),
         backgroundColor: Color.fromARGB(255, 0, 0, 116),
+          iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
          
       ),
       body: SingleChildScrollView(
